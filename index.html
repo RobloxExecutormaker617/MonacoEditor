@@ -3,14 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monaco Editor</title>
+    <title>Monaco Editor - Lua</title>
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.30.1/min/vs/loader.js"></script>
     <script>
-        require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.30.1/min/vs' } });
+        require.config({
+            paths: {
+                'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.30.1/min/vs'
+            }
+        });
+
         require(['vs/editor/editor.main'], function () {
+            // Register Lua as a language in Monaco
+            monaco.languages.register({ id: 'lua' });
+
+            // Define Lua language configuration
+            monaco.languages.setMonarchTokensProvider('lua', {
+                tokenizer: {
+                    root: [
+                        [/\b(?:if|then|else|end|for|while|repeat|until|do|local|return|break)\b/, 'keyword'],
+                        [/\b(?:true|false|nil)\b/, 'keyword'],
+                        [/[a-zA-Z_][\w]*/, 'identifier'],
+                        [/[0-9]+/, 'number'],
+                        [/[;,.()\[\]=<>:+\-*/%&|^!~]/, 'operator'],
+                        [/"([^"\\]|\\.)*"/, 'string'],
+                        [/'([^'\\]|\\.)*'/, 'string'],
+                        [/\b\d+\.\d*\b|\b\d*\.\d+\b/, 'number.float'],
+                    ]
+                }
+            });
+
+            // Create Monaco editor instance
             monaco.editor.create(document.getElementById('container'), {
-                value: 'console.log("Hello Monaco!");',
-                language: 'javascript'
+                value: 'print("Hello Lua!")',
+                language: 'lua',
+                theme: 'vs-dark'
             });
         });
     </script>
